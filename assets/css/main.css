@@ -1,0 +1,14 @@
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 64em) {
+    main {
+        flex-direction: row;
+        gap: 6.75rem;
+        & > .questions {
+        display: none;
+    }
+    }
+}
