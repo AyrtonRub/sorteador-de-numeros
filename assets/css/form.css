@@ -4,6 +4,13 @@ form {
     flex-direction: column;
     gap: 2.5rem;
 
+    & > div[data-legend] {
+      text-align: center;
+      & div {
+        text-transform: uppercase;
+      }
+    }
+
     & legend {
       font-size: 1.25rem;
       font-weight: 700;
@@ -16,6 +23,7 @@ form {
       color: var(--content-secondary);
       line-height: 150%;
       font-size: 0.875rem;
+      width: 100%;
     }
 
     & #config-draw {
@@ -144,15 +152,17 @@ form {
         width: 3.25rem;
         height: 3.25rem;
         border-radius: 1rem;
-        background: var(--content-brand, #c58de7);
+        background-color: var(--content-brand);
         color: var(--color-inverse);
         font-size: 1.5rem;
         font-weight: 700;
         font-family: var(-ff-robMono);
-        transform: scale(1.2);
         transform: scale(0) rotate(0);
-        animation: scale 0.5s ease 1s forwards, rotate 1.5s ease forwards 1.5s,
-          scale1 0.5s ease 3s forwards;
+        animation: scale 4s ease 1s forwards;
+
+        & p {
+          animation: desfazerRotate 4s ease 1s  forwards;
+        }
       }
     }
 
@@ -214,62 +224,47 @@ form {
   }
 }
 
-@keyframes moveX {
-  50% {
-    transform: translateX(50%);
-  }
-  100% {
-    transform: translateX(0);
-  }
+
+@media (min-width: 64rem) {
+    form {
+      width: 30.125rem ;
+    }
 }
-
-@keyframes moveBackground {
-  50% {
-    background-image: linear-gradient(
-      180deg,
-      var(--accent-green) 0%,
-      var(--accent-lime) 20%,
-      var(--accent-pink) 70%,
-      var(--accent-blue) 100%
-    );
-  }
-  100% {
-    background-image: linear-gradient(90deg, transparent);
-  }
-}
-
-/* @keyframes appear {
-  to {
-      width: 3.25rem;
-        height: 3.25rem;
-  }
-} */
-
-/* @keyframes scale {
-  25% {
-    transform: scale(1.2) rotate(0);
-  } 50% {
-    transform: scale(1.2) rotate(180deg);
-  } 100% {
-    transform: scale(1) rotate(180deg);
-  }
-} */
 
 @keyframes scale {
-  100% {
+  0% {
+    transform: scale(0) rotate(0);
+    background-color: var(--content-brand);
+  }
+  10% {
     transform: scale(1.1) rotate(0);
+    background-color: var(--content-brand);
   }
-}
-
-@keyframes rotate {
-  100% {
+  80% {
     transform: scale(1.1) rotate(180deg);
+    background-color: var(--content-brand);
   }
-}
-
-@keyframes scale1 {
   100% {
     transform: scale(1) rotate(180deg);
-    opacity: 0;
+    background-color: transparent;
+  }
+}
+
+@keyframes desfazerRotate {
+  0% {
+    transform: rotate(0);
+    color: var(--color-inverse);
+  }
+  10% {
+    transform: rotate(0);
+    color: var(--color-inverse);
+  }
+  80% {
+    transform: rotate(-180deg);
+    color: var(--color-inverse);
+  }
+  100% {
+    transform: rotate(-180deg);
+    color: var(--content-brand);
   }
 }
