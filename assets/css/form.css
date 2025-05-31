@@ -231,6 +231,14 @@ form {
     }
 }
 
+@keyframes moveX {
+  50% {
+    transform: translateX(50%);
+  } 100% {
+    transform: translateX(0);
+  }
+}
+
 @keyframes scale {
   0% {
     transform: scale(0) rotate(0);
