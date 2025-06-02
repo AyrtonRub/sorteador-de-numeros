@@ -26,8 +26,8 @@ form {
       width: 100%;
     }
 
-    & #config-draw {
-      display: flex;
+    & #configDraw {
+      
       flex-direction: column;
       gap: 1.25rem;
       & .fields {
@@ -166,50 +166,6 @@ form {
       }
     }
 
-    & .btn {
-      border-radius: 0.5rem;
-      background: var(--background-tertiary, #24222e);
-      border: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      justify-content: center;
-      text-transform: uppercase;
-      font-weight: 700;
-      color: var(--content-primary);
-      font-family: var(--ff-robFlex);
-      height: 3.5rem;
-
-      & img {
-        width: 1.5rem;
-      }
-    }
-
-    & .btn:hover {
-      cursor: pointer;
-    }
-
-    & .btn-hover {
-      width: 100%;
-    }
-
-    & .btn-hover {
-      padding: 1.5px;
-      border-radius: 0.5rem;
-    }
-
-    & .btn-hover:hover,
-    & .btn-hover:focus {
-      background-image: linear-gradient(
-        90deg,
-        var(--accent-green) 0%,
-        var(--accent-lime) 20%,
-        var(--accent-pink) 70%,
-        var(--accent-blue) 100%
-      );
-
-      animation: moveBackground 3s ease forwards;
-    }
 
     #draw {
       position: relative;
