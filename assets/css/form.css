@@ -4,12 +4,6 @@ form {
     flex-direction: column;
     gap: 2.5rem;
 
-    & > div[data-legend] {
-      text-align: center;
-      & div {
-        text-transform: uppercase;
-      }
-    }
 
     & legend {
       font-size: 1.25rem;
@@ -27,7 +21,6 @@ form {
     }
 
     & #configDraw {
-      
       flex-direction: column;
       gap: 1.25rem;
       & .fields {
@@ -158,14 +151,13 @@ form {
         font-weight: 700;
         font-family: var(-ff-robMono);
         transform: scale(0) rotate(0);
-        animation: scale 4s ease 1s forwards;
+        animation: scale 3.5s ease 1s forwards;
 
         & p {
-          animation: desfazerRotate 4s ease 1s  forwards;
+          animation: desfazerRotate 3.5s ease 1s forwards;
         }
       }
     }
-
 
     #draw {
       position: relative;
@@ -177,20 +169,29 @@ form {
         }
       }
     }
+   #drawAgain.appearButton {
+      animation: appearButton 1s ease;
+      display: flex;
+    }
+
+    #drawAgain {
+      display: none;
+    }
+
   }
 }
 
-
 @media (min-width: 64rem) {
-    form {
-      width: 30.125rem ;
-    }
+  form {
+    width: 30.125rem;
+  }
 }
 
 @keyframes moveX {
   50% {
     transform: translateX(50%);
-  } 100% {
+  }
+  100% {
     transform: translateX(0);
   }
 }
@@ -230,5 +231,16 @@ form {
   100% {
     transform: rotate(-180deg);
     color: var(--content-brand);
+  }
+}
+
+@keyframes appearButton {
+  0% {
+    opacity: 0;
+    display: none;
+  }
+  100% {
+    opacity: 1;
+    display: flex;
   }
 }

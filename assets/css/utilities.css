@@ -90,6 +90,7 @@
 
 .textCenter {
     text-align: center;
+    text-transform: uppercase;
 }
 
 .display-none {
