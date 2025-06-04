@@ -1,153 +1,154 @@
 (function () {
-  const btnDraw = document.getElementById("draw");
-  const btndisplayNone = document.querySelector(".btn-hover");
   const btnDrawAgain = document.getElementById("drawAgain");
-  const configDraw = document.getElementById("configDraw");
-  const inputsNumb = document.querySelectorAll("[data-input]");
-  const toggle = document.getElementById("toggle");
-  const output = document.getElementById("output");
-  const result = document.querySelector("#resultado");
-  const resultOriginal = result.innerHTML;
+  const btnDraw = document.getElementById("draw");
+  const isEnabled = document.getElementById("toggle");
+  const dataInputs = document.querySelectorAll("[data-input]");
+  const fieldset = document.getElementById("fieldset");
 
-  //Função para não permitir letras e números nos inputs de números
-  inputsNumb.forEach((input) => {
-    input.addEventListener("input", function (e) {
-      e.target.value = e.target.value.replace(/\D+/g, "");
+  //FUNÇÃO PARA NÃO PERMITIR LETRAS E SÍMBOLOS NOS INPUTS
+  function removeLettersAndSumbols() {
+    dataInputs.forEach((input) => {
+      input.oninput = function (e) {
+        e.target.value = e.target.value.replace(/\D+/g, "");
+      };
     });
-  });
+  }
+  removeLettersAndSumbols();
 
-  //função para gerar números aleatórios
+  //FUNÇÃO PARA A CRIAÇÃO DE TAGS
+  function createTag(tagName, className) {
+    const tag = document.createElement(tagName);
+    if (className) {
+      tag.classList.add(className);
+    }
+    return tag;
+  }
 
+  //FUNÇÃO PARA GERAR OS NUMEROS RANDOMICOS
   function random(min, max) {
     if (min > max) {
-      return alert(
-        `O número minimo ${min} é maior que máximo ${max}, por favor, digite novamente os dados`
-      );
+      return alert(`O número mínimo é maior que o máximo!`);
     }
-
-    return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  //função para criar tags
+  //VARIÁVEL PARA ARMAZENAMENTO DA QUANTIDADE DE RESULTADOS
+  let resultCounter = 0;
 
-  function createTag(tagName, className) {
-    const element = document.createElement(tagName);
-    if (className) {
-      element.classList.add(className);
-    }
+  //VARIÁVEL PARA ARMAZENAR O HTML DA PÁGINA ATUAL
+  const currentPageHtml = fieldset.innerHTML;
 
-    return element;
-  }
-
-  const arrNumbersDraw = [];
-
-  // função para gerar os numeros e mostrar na tela
-
-  function drawNumbers(e) {
-    e.preventDefault();
-
-    const qtdNumbers = document.getElementById("numbers").value;
-    const min = document.getElementById("min").value;
-    const max = document.getElementById("max").value;
-    const appearAnimation = document.querySelector("[data-appearAnimation]");
-
-    if (!qtdNumbers || !min || !max) {
-      return alert(`Por favor, insira todos os números antes de continuar`);
-    }
-
-    const parseQtdNumbers = parseInt(qtdNumbers);
-    const parseMin = parseInt(min);
-    const parseMax = parseInt(max);
-
-    if (parseQtdNumbers > parseMax - parseMin + 1) {
-      return alert(
-        `a quantidde de números ${parseQtdNumbers} é maior que o range entre min e max, por favor realize o ajuste para continuar`
-      );
-    }
-
-    const enabled = toggle.checked;
-
-    while (arrNumbersDraw.length < parseQtdNumbers) {
-      const numSort = random(parseMin, parseMax);
-      if (!enabled) {
-        arrNumbersDraw.push(numSort);
-      } else {
-        if (!arrNumbersDraw.includes(numSort)) {
-          arrNumbersDraw.push(numSort);
-        }
-      }
-    }
-
-    btndisplayNone.classList.toggle("display-none");
-    configDraw.classList.toggle("display-none");
-
-     let contador = 0
-    
-    //Fech para carregar html
-    fetch("teste.html")
-      .then((response) => response.text())
-      .then((html) => {
-        result.innerHTML = html;
-        
-        const contResult = document.getElementById('contResult')
-         contador++
-        contResult.textContent = `${contador}° resultado`
-      });
-
-      console.log(contador)
-
-     //função para contar a quantidade de resultados 
-   
-
-    //função para a criação dos números na tela
-    function createItem(num) {
-      const span = createTag("span");
-      span.setAttribute("data-appearAnimation", "");
-      const p = createTag("p", "draw-number");
-      p.textContent = num;
-      span.appendChild(p);
-
-      return span;
-    }
-
-    const arr = [];
-
-    arrNumbersDraw.forEach((el) => {
-      arr.push(createItem(el));
-    });
-
-    function eventAnimation(item) {
-      return new Promise((resolve) => {
-        item.addEventListener("animationend", function () {
+  //FUNÇÃO PARA AGUARDAR A EXECUÇÃO DAS ANIMAÇÕES
+  function waitForAnimation(element) {
+    return new Promise((resolve) => {
+      element.addEventListener(
+        "animationend",
+        function () {
           resolve();
-        });
-      });
+        },
+        { once: true }
+      ); // <- garante que o listener será removido automaticamente
+    });
+  }
+
+  //FUNÇÃO PARA CRIAR A CAIXA DE ITENS
+  function createItem(item) {
+    const span = createTag("span");
+    const p = createTag("p", "draw-number");
+    p.textContent = item;
+    span.appendChild(p);
+
+    return span;
+  }
+
+  //FUNÇÃO PARA SORTEAR OS NÚMEROS
+  function draw(e) {
+    e.preventDefault();
+    //VARIÁVEIS PARA ARMAZENAMENTO DOS NÚMEROS DOS INPUTS
+    const qtdNumbers = parseInt(document.getElementById("numbers").value);
+    const min = parseInt(document.getElementById("min").value);
+    const max = parseInt(document.getElementById("max").value);
+
+    //VERIFICA A PRESENÇA DOS NUMEROS NOS INPUTS
+    if (isNaN(qtdNumbers) || isNaN(min) || isNaN(max)) {
+      return alert(`Preencha todos os campos paa continuar`);
+    }
+    //VERIFICA SE A QUANDIDADE DE NÚMEROS ESTÁ DENTRO DO RANGE ENTRE MIN E MAX
+    if (qtdNumbers > max - min + 1) {
+      return alert(
+        `A quantidade solicitada e maior que o range entre min e max`
+      );
     }
 
-    async function waitForEvent() {
-      try {
-        for (let i of arr) {
-          const item = i;
-          output.appendChild(item);
-          await eventAnimation(item);
+    //ARRAY PARA ARMAZENAMENTO DOS NÚMEROS SORTEADOS
+    const drawNumbers = [];
+
+    //LAÇO PARA ADICIONAR OS NÚMEROS SORTEADOS DENTRO DO ARRAY
+    while (drawNumbers.length < qtdNumbers) {
+      const numSort = random(min, max);
+      if (!isEnabled.checked) {
+        drawNumbers.push(numSort);
+      } else {
+        if (!drawNumbers.includes(numSort)) {
+          drawNumbers.push(numSort);
         }
-        appearAnimation.classList.add("appearButton");
-      } catch (err) {
-        throw new Error(err);
       }
     }
 
-    waitForEvent();
+    loadItens(drawNumbers);
+ 
   }
-  btnDraw.addEventListener("click", drawNumbers);
 
-  btnDrawAgain.addEventListener("click", function (e) {
-    e.preventDefault();
-    this.classList.remove("appearButton");
-    result.innerHTML = resultOriginal;
-    output.textContent = "";
-    arrNumbersDraw.length = 0;
-    btndisplayNone.classList.toggle("display-none");
-    configDraw.classList.toggle("display-none");
-  });
+  //FUNÇÃO PARA CARREGAR O HTML NA PÁGINA
+  async function uploadHTML() {
+    try {
+      const response = await fetch("pagina.html");
+
+      if (!response.ok) {
+        throw new Error(`Erro ao carregar o conteúdo err: ${response.status}`);
+      }
+
+      const html = await response.text();
+      fieldset.innerHTML = html;
+      await new Promise(requestAnimationFrame);
+
+      const counter = document.getElementById("counter");
+      resultCounter++;
+      counter.textContent = `${resultCounter}° resultado`;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  //FUNÇÃO PARA RENDERIZAR NA TELA OS NÚMEROS SORTEADOS
+  async function loadItens(arr) {
+    try {
+      await uploadHTML();
+      const output = document.getElementById("output");
+      
+      console.log(arr)
+      for (let i of arr) {
+        const num = i;
+        const item = createItem(num);
+        console.log(item);
+        output.appendChild(item);
+        await waitForAnimation(item);
+      }
+
+      btnDrawAgain.classList.add('appearButton')
+      
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function drawAgain(e) {
+    e.preventDefault()
+    fieldset.innerHTML = currentPageHtml
+  }
+
+ 
+  btnDraw.addEventListener("click", draw);
+  btnDrawAgain.addEventListener('click', drawAgain)
 })();
