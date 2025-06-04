@@ -95,6 +95,8 @@
       }
     }
 
+    btnDraw.classList.toggle('display-none')
+
     loadItens(drawNumbers);
  
   }
@@ -146,6 +148,9 @@
   function drawAgain(e) {
     e.preventDefault()
     fieldset.innerHTML = currentPageHtml
+    btnDraw.classList.toggle('display-none')
+    btnDrawAgain.classList.toggle('display-none')
+    btnDrawAgain.classList.toggle('appearButton')
   }
 
  
